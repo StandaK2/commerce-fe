@@ -1,46 +1,128 @@
-# Getting Started with Create React App
+# Commerce Frontend - Product Management Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React TypeScript application for managing products in the Commerce API system.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Product Management**: View, create, update, and delete products
+- **Advanced Filtering**: Filter by name, stock quantity, price, sold count, and sold sum
+- **Sorting**: Sort products by any column
+- **Smart Auto-Refresh**: Automatic polling every 15 seconds with intelligent pausing
+- **Manual Refresh**: Instant refresh button for immediate updates
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
+- **Modern UI**: Built with Material-UI components
+- **Form Validation**: Client-side validation matching backend requirements
+- **Error Handling**: Proper error handling for API responses
 
-### `npm start`
+## Technology Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React 18 with TypeScript
+- Material-UI (MUI) for components and styling
+- MUI X Data Grid for advanced table functionality
+- React Hook Form with Yup validation
+- Axios for API communication
+- Responsive design with CSS Grid and Flexbox
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js 16+ and npm
+- Commerce API backend running on `http://localhost:8080`
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Development
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm start
+```
 
-### `npm run eject`
+The application will open at `http://localhost:3000`.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Database Seeding
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+To populate your database with realistic grocery store test data:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+npm run seed              # Simple seeding with 25+ products and ~30 orders
+npm run seed-advanced     # Advanced seeding with progress tracking
+npm run seed-quick        # Faster seeding for quick testing
+./seed-database.sh        # Bash version (uses curl)
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+**Prerequisites**: Backend API must be running on `http://localhost:8080`
 
-## Learn More
+The seeding creates:
+- 25+ grocery products (produce, dairy, meat, pantry items, etc.)
+- Varied stock levels (out-of-stock, low-stock, normal stock)
+- Realistic pricing ($1.49 - $14.99)
+- Orders in different states (paid, cancelled, pending)
+- Sales data for testing soldCount and soldSum metrics
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+See [SEEDING.md](./SEEDING.md) for detailed documentation.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Production Build
+
+```bash
+npm run build
+```
+
+## API Integration
+
+The application connects to the Commerce API backend and uses the following endpoints:
+
+- `GET /api/products` - Fetch all products
+- `POST /api/products` - Create a new product
+- `PUT /api/products/{productId}` - Update an existing product
+- `DELETE /api/products/{productId}` - Delete a product
+
+## Product Data Structure
+
+Each product contains:
+- **ID**: Unique identifier (UUID)
+- **Name**: Product name (required, non-blank)
+- **Price**: Product price (required, minimum $0.01)
+- **Stock Quantity**: Available stock (required, minimum 0)
+- **Created At**: Timestamp when product was created
+- **Sold Count**: Total number of units sold
+- **Sold Sum**: Total revenue from sales
+
+## Validation Rules
+
+The frontend validation matches the backend requirements:
+- Product name: Required, cannot be blank
+- Price: Required, must be at least $0.01
+- Stock quantity: Required, cannot be negative
+
+## Error Handling
+
+The application handles various error scenarios:
+- Network errors
+- Validation errors
+- Business logic errors (e.g., product not found, product has active orders)
+- Server errors
+
+Error messages are displayed in user-friendly alerts with appropriate actions.
+
+## Auto-Refresh & Polling
+
+The application includes smart polling functionality:
+
+- **15-second interval**: Automatically refreshes product data every 15 seconds
+- **Smart pausing**: Polling pauses during user interactions (forms, dialogs)
+- **Visibility detection**: Polling stops when browser tab is hidden
+- **Manual controls**: Users can manually refresh or toggle auto-refresh
+- **Visual indicators**: Status chip shows polling state and last refresh time
+- **Background updates**: Polling doesn't interfere with user experience
+
+### Polling Controls
+
+- **Refresh Button**: Manual refresh for immediate updates
+- **Play/Pause Button**: Toggle auto-refresh on/off
+- **Status Indicator**: Shows current polling state
+- **Last Updated**: Displays timestamp of last data refresh (desktop only)
