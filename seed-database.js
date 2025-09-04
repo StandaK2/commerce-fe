@@ -176,10 +176,13 @@ const seedDatabase = async () => {
       // Add random order items (1-5 items per order)
       const itemCount = randomInt(1, 5);
       const orderItems = [];
+      const usedProductIds = new Set(); // Track products already added to this order
       
       for (let j = 0; j < itemCount; j++) {
-        // Select random product (only those with stock > 0 for realistic orders)
-        const availableProducts = createdProducts.filter(p => p.stockQuantity > 0);
+        // Select random product (only those with stock > 0 and not already in this order)
+        const availableProducts = createdProducts.filter(p => 
+          p.stockQuantity > 0 && !usedProductIds.has(p.id)
+        );
         if (availableProducts.length === 0) break;
         
         const product = randomChoice(availableProducts);
@@ -189,6 +192,7 @@ const seedDatabase = async () => {
         const itemResult = await createOrderItem(orderId, product.id, quantity);
         if (itemResult.success) {
           orderItems.push({ productId: product.id, quantity, productName: product.name });
+          usedProductIds.add(product.id); // Mark product as used in this order
           // Update local stock tracking
           product.stockQuantity -= quantity;
         }
